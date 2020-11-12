@@ -134,20 +134,31 @@ void Dictionary::writeToFile(string fName){
     ofstream file(filename, ios::out|ios::binary);
     int size = this->allwords.size();
     file.write((char*)&size,sizeof(int));
-    file.write((char*)&this->allwords[0],allwords.size()*sizeof(string));
+    int str_len;
+    for(int i = 0; i < size;i ++){
+        str_len = allwords[i].length();
+        file.write((char*)&str_len,sizeof(int));
+        file.write(allwords[i].c_str(),str_len+1);
+    }
     file.close();
 }
 
 Dictionary Dictionary::readFromFile(string fName){
-    Dictionary d;
+	  Dictionary d;
     vector<string> v;
     int size;
     fstream file;
     file.open(fName, ios::in);
-    file.read((char*)&size, sizeof(int));
+    file.read((char*)&size, sizeof(size));
     v.resize(size);
-    file.read((char*)&v[0], size*sizeof(string));
-    file.close();
+    for(int i = 0; i <size;i++){
+        int str_len;
+        file.read((char*)&str_len,sizeof(str_len));
+        char* strData = new char[str_len];
+        file.read(strData, str_len*sizeof(char)+1);
+        string convertedString(strData);
+        v[i] = convertedString.substr(0,str_len);
+    }
 
     DictionaryNode* prim = new DictionaryNode;
     d.depths.resize(21);

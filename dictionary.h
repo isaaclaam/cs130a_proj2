@@ -10,9 +10,11 @@ class Dictionary{
 
 private:
 struct DictionaryNode{
+	DictionaryNode():hashfunct(), depth(0){}
     struct sucessiveHash{
         vector<string> list;
         DictionaryNode* next;
+	sucessiveHash():next(0){}
     };
     vector<sucessiveHash> table;
     Hash24 hashfunct;
